@@ -15,6 +15,17 @@ Third-party plugins:
 ## Quick Start
 > [!IMPORTANT]
 > For Switchboard to launch correctly, your project must be on DEATH's `D:` drive!
+### Remove Sublevels
+For nDisplay stability, all actors should be moved from sublevels into the persistent level. 
+This can be done as follows:
+1. First, make a backup of the original level as these steps cannot be undone.
+2. Open Levels window
+3. Right click on the first sublevel below the persistent level.
+4. Click 'Select Actors'
+5. Right click on the persistent level.
+6. Click 'Move Selected Actors to Level'
+7. Delete the sublevel by selecting it and pressing the Delete key.
+8. Repeat steps 3-7 until all sublevels have been removed.
 ### Setting up nDisplay configuration
 - Drag nDisplaySublevel into the desired level
 - Break sublevel
@@ -24,7 +35,14 @@ Third-party plugins:
 `TODO: Setting up live link config / package live link config with plugin`
 ### Setting up FreeFileSync
 - Create new configuration
-- Add an entry to copy from DEATH to each of WAR, FAMINE, and PESTILENCE. The relative path from the drive root on each machine should be the same.
+- Add an entry to copy from DEATH to each of WAR, FAMINE, and PESTILENCE. 
+
+> [!IMPORTANT]
+> The relative path from the drive root on each machine should be the same. For example:
+>
+> `D:/folder/my_project` -> `W:/folder/my_project`
+>
+> and likewise for FAMINE (`X:`) and PESTILENCE (`Y:`).
 - Set Synchronization mode to **mirror**.
 - Compare and Synchronize to sync files across all machines.
 
@@ -36,6 +54,18 @@ Third-party plugins:
 - Add nDisplay device from the Add Device dropdown. Select 'Populate' to automatically detect the nDisplay config asset. Launch as 'Standalone (ICVFX)'
 - Add Unreal device from the Add Device dropdown. For name, put "Editor" and for IP address put the IP Address of DEATH: `192.168.56.20`.
 - Add LiveLinkHub device from the Add Device dropdown. For name, put "LLHub" and for IP address put the IP Address of DEATH `192.168.56.20`.
+
+Optionally add framelock verification tool:
+- Add ExeLauncher device from the Add Device dropdown. Fill out the form with the following:
+    - Name: `War_Framelock`
+    - Address: `192.168.56.24`
+    - Path to EXE: `D:/FRAMELOCK_TESTING/dx12_present_barrier.exe`.
+- Repeat for the name and address of FAMINE:
+    - Name: `Famine_Framelock`
+    - Address: `192.168.56.29`
+- And finally repeat again for PESTILENCE:
+    - Name: `Pestilence_Framelock`
+    - Address: `192.168.56.4`
 ### Launching with Switchboard
 Pre-launch checklist:
 - All render nodes and LED processors are switched on and genlocked / framelocked. `TODO: See framelock verification`
@@ -46,7 +76,7 @@ Launch Sequence:
 - Launch Switchboard with the configuration for your project.
 - Click plus button in right hand side of multi-user session dialog to increment session ID. **You MUST do this between every launch.**
 - Connect to all Switchboard Listener instances for each device in Switchboard.
-- Launch all devices in Switchboard.
+- Launch all devices in Switchboard (excluding framelock verification tool).
 
 ## Troubleshooting
 - It is sometimes recommended to run Switchboard Listener as Administrator on all render nodes.
