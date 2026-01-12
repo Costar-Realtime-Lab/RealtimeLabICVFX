@@ -7,6 +7,7 @@ Engine plugins:
 - LiveLink
 - LiveLinkHub
 - nDisplay
+- [Optional] Stage Monitor
 
 Third-party plugins:
 - MoSysVPFree ([Download on Fab](https://www.fab.com/listings/4b0ddb44-8d3d-4eb4-8009-9da580f54b38))
@@ -44,9 +45,12 @@ This can be done as follows:
 >
 > and likewise for FAMINE (`X:`) and PESTILENCE (`Y:`).
 - Set Synchronization mode to **mirror**.
+- It is recommended to filter out temporary and non-required files to reduce synchronization time. Add the following to the exclude list:
+    - `.vs/`
+    - `*/Intermediate/`
+    - `Saved/`
+    - `*.pdb`
 - Compare and Synchronize to sync files across all machines.
-
-`TODO: Setting up ignore paths.`
 ### Setting up Switchboard
 - Launch Switchboard
 - Create a new Switchboard Config, saving the config in the same folder as the uproject.
@@ -80,6 +84,7 @@ Launch Sequence:
 
 ## Troubleshooting
 - It is sometimes recommended to run Switchboard Listener as Administrator on all render nodes.
+- Remember to increment the multi-user session ID between launches.
 
 ## TODO
 
