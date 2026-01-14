@@ -28,56 +28,43 @@ This can be done as follows:
 7. Delete the sublevel by selecting it and pressing the Delete key.
 8. Repeat steps 3-7 until all sublevels have been removed.
 ### 2. Set up nDisplay
-- Drag nDisplaySublevel into the desired level
-- Break sublevel
-- Set CineCamera association
-- Position nDisplay configration in world
+- Drag `nDisplaySublevel` (found in `Plugins > RealtimeLabICVFX > Levels`) into the desired level.
+- Break sublevel:
+    - Right-click on `nDisplaySublevel` in the outliner.
+    - Go to `Level > Break` and select `Break Level Instance(s)`.
+- Set CineCamera association:
+    - Click on `nDisplayRealtimeLab` in the outliner.
+    - Go to the `ICVFXCamera` component in the details panel.
+    - In the `Camera` category, find `Cine Camera Actor` property and select `CanonC400` from the dropdown.
+- Position `nDisplayRealtimeLab` to desired location in the level.
 ### 3. Set up LiveLinkHub
 `TODO: Setting up live link config / package live link config with plugin`
 
 `TODO: This may be automated by the SwitchboardConfigGenerator`
-### 4. Set up FreeFileSync
-`TODO: This will be automated in future by the SwitchboardConfigGenerator`
-- Create new configuration
-- Add an entry to copy from DEATH to each of WAR, FAMINE, and PESTILENCE. 
-
-> [!IMPORTANT]
-> The relative path from the drive root on each machine should be the same. For example:
->
-> `D:/folder/my_project` -> `W:/folder/my_project`
->
-> and likewise for FAMINE (`X:`) and PESTILENCE (`Y:`).
-- Set Synchronization mode to **mirror**.
-- It is recommended to filter out temporary and non-required files to reduce synchronization time. Add the following to the exclude list:
-    - `.vs/`
-    - `*/Intermediate/`
-    - `Saved/`
-    - `*.pdb`
-- Compare and Synchronize to sync files across all machines.
-### 5. Setting up Switchboard with SwitchboardConfigGenerator
+### 4. Setting up Switchboard with SwitchboardConfigGenerator
 - Run `SwitchboardConfigGenerator.exe`. It is located in the root directory of the **RealtimeLabICVFX** plugin.
 - Input the path to the engine directory when prompted. By default, Unreal Engine is installed to `C:/Program Files/Epic Games/UE_5.x/Engine` but the actual location will depend on your engine version and install location.
 - `SwitchboardConfigGenerator` should have created `<project name>_SwitchboardConfig.json` next to your `.uproject` file.
 - Launch Switchboard.
 - Go to `Configs > Load Config > Browse...` and browse to `<project name>_SwitchboardConfig.json`. Open the generated config.
 - Select the level containing your nDisplay config from the `Level:` dropdown. You may need to click the refresh button to the right of the dropdown if your level is not shown in the dropdown.
-### 6. Customizing Switchboard Config via `StudioProperties.json`
+### 5. Customizing Switchboard Config via `StudioProperties.json`
 `SwitchboardConfigGenerator` will create a `StudioProperties.json` within the plugin root directory. This can be modified to customize the Switchboard configuration that is generated (e.g. to customize CVars for specific render nodes).
 
 For more information on configuration options see the [Studio Properties Reference](Docs/StudioPropertiesReference.md).
 
 After modifying `StudioProperties.json`, run `SwitchboardConfigGenerator.exe` again to update the configuration. This will overwrite any additional configuration you have done within Switchboard, so ideally all additional config should be performed within `StudioProperties.json`.
-### 7. Launching with Switchboard
+### 6. Launching with Switchboard
 Pre-launch checklist:
 - All render nodes and LED processors are switched on and genlocked / framelocked. See [Framelock Verifcation Guide](Docs/FramelockVerification.md).
 - No instances of Unreal are currently running.
 - Switchboard Listener is running on all control and render nodes.
 
 Launch Sequence:
-- Launch Switchboard with the configuration for your project.
-- Use FreeFileSync to synchronize the project between the control machine and all render nodes.
-- Click plus button in right hand side of multi-user session dialog to increment session ID. **You MUST do this between every launch.**
 - Connect to all Switchboard Listener instances for each device in Switchboard.
+- Launch Switchboard with the configuration for your project.
+- Run the `Sync` device to launch a FreeFileSync batch to synchronize the project between the control machine and all render nodes. Wait until synchronization completes.
+- Click plus button in right hand side of multi-user session dialog to increment session ID. **You MUST do this between every launch.**
 - Launch all nDisplay and editor devices in Switchboard.
 
 ## Troubleshooting
