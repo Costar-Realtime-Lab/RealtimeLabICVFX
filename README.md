@@ -16,10 +16,10 @@ Third-party plugins:
 ## Quick Start
 > [!IMPORTANT]
 > For Switchboard to launch correctly, your project must be on DEATH's `D:` drive!
-### Remove Sublevels
+### 1. Remove Sublevels
 For nDisplay stability, all actors should be moved from sublevels into the persistent level. 
 This can be done as follows:
-1. First, make a backup of the original level as these steps cannot be undone.
+1. **Make a backup of the original level as these steps cannot be undone.**
 2. Open Levels window
 3. Right click on the first sublevel below the persistent level.
 4. Click 'Select Actors'
@@ -27,14 +27,17 @@ This can be done as follows:
 6. Click 'Move Selected Actors to Level'
 7. Delete the sublevel by selecting it and pressing the Delete key.
 8. Repeat steps 3-7 until all sublevels have been removed.
-### Setting up nDisplay configuration
+### 2. Set up nDisplay
 - Drag nDisplaySublevel into the desired level
 - Break sublevel
 - Set CineCamera association
 - Position nDisplay configration in world
-### Setting up LiveLinkHub
+### 3. Set up LiveLinkHub
 `TODO: Setting up live link config / package live link config with plugin`
-### Setting up FreeFileSync
+
+`TODO: This may be automated by the SwitchboardConfigGenerator`
+### 4. Set up FreeFileSync
+`TODO: This will be automated in future by the SwitchboardConfigGenerator`
 - Create new configuration
 - Add an entry to copy from DEATH to each of WAR, FAMINE, and PESTILENCE. 
 
@@ -51,41 +54,36 @@ This can be done as follows:
     - `Saved/`
     - `*.pdb`
 - Compare and Synchronize to sync files across all machines.
-### Setting up Switchboard
-- Launch Switchboard
-- Create a new Switchboard Config, saving the config in the same folder as the uproject.
-- Select the level that you added the nDisplay config to from the dropdown.
-- Add nDisplay device from the Add Device dropdown. Select 'Populate' to automatically detect the nDisplay config asset. Launch as 'Standalone (ICVFX)'
-- Add Unreal device from the Add Device dropdown. For name, put "Editor" and for IP address put the IP Address of DEATH: `192.168.56.20`.
-- Add LiveLinkHub device from the Add Device dropdown. For name, put "LLHub" and for IP address put the IP Address of DEATH `192.168.56.20`.
+### 5. Setting up Switchboard with SwitchboardConfigGenerator
+- Run `SwitchboardConfigGenerator.exe`. It is located in the root directory of the **RealtimeLabICVFX** plugin.
+- Input the path to the engine directory when prompted. By default, Unreal Engine is installed to `C:/Program Files/Epic Games/UE_5.x/Engine` but the actual location will depend on your engine version and install location.
+- `SwitchboardConfigGenerator` should have created `<project name>_SwitchboardConfig.json` next to your `.uproject` file.
+- Launch Switchboard.
+- Go to `Configs > Load Config > Browse...` and browse to `<project name>_SwitchboardConfig.json`. Open the generated config.
+- Select the level containing your nDisplay config from the `Level:` dropdown. You may need to click the refresh button to the right of the dropdown if your level is not shown in the dropdown.
+### 6. Customizing Switchboard Config via `StudioProperties.json`
+`SwitchboardConfigGenerator` will create a `StudioProperties.json` within the plugin root directory. This can be modified to customize the Switchboard configuration that is generated (e.g. to customize CVars for specific render nodes).
 
-Optionally add framelock verification tool:
-- Add ExeLauncher device from the Add Device dropdown. Fill out the form with the following:
-    - Name: `War_Framelock`
-    - Address: `192.168.56.24`
-    - Path to EXE: `D:/FRAMELOCK_TESTING/dx12_present_barrier.exe`.
-- Repeat for the name and address of FAMINE:
-    - Name: `Famine_Framelock`
-    - Address: `192.168.56.29`
-- And finally repeat again for PESTILENCE:
-    - Name: `Pestilence_Framelock`
-    - Address: `192.168.56.4`
-### Launching with Switchboard
+For more information on configuration options see the [Studio Properties Reference](Docs/StudioPropertiesReference.md).
+
+After modifying `StudioProperties.json`, run `SwitchboardConfigGenerator.exe` again to update the configuration. This will overwrite any additional configuration you have done within Switchboard, so ideally all additional config should be performed within `StudioProperties.json`.
+### 7. Launching with Switchboard
 Pre-launch checklist:
-- All render nodes and LED processors are switched on and genlocked / framelocked. `TODO: See framelock verification`
+- All render nodes and LED processors are switched on and genlocked / framelocked. See [Framelock Verifcation Guide](Docs/FramelockVerification.md).
 - No instances of Unreal are currently running.
-- Switchboard Listener is running on all control and render nodes: DEATH, WAR, FAMINE, and PESTILENCE.
+- Switchboard Listener is running on all control and render nodes.
 
 Launch Sequence:
 - Launch Switchboard with the configuration for your project.
+- Use FreeFileSync to synchronize the project between the control machine and all render nodes.
 - Click plus button in right hand side of multi-user session dialog to increment session ID. **You MUST do this between every launch.**
 - Connect to all Switchboard Listener instances for each device in Switchboard.
-- Launch all devices in Switchboard (excluding framelock verification tool).
+- Launch all nDisplay and editor devices in Switchboard.
 
 ## Troubleshooting
 - It is sometimes recommended to run Switchboard Listener as Administrator on all render nodes.
 - Remember to increment the multi-user session ID between launches.
+- Delete `StudioProperties.json` and `<project name>_SwitchboardConfig.json` and regenerate via `SwitchboardConfigGenerator.exe` to restore Switchboard config to default.
 
 ## TODO
-
 - LED wall meshes: Consistent naming between static mesh assets, static mesh components in the nDisplay config, and viewports in the nDisplay cluster. (E.g., wild wall meshes are labelled left vs right, static mesh components are enumerated - which associates with which?).
