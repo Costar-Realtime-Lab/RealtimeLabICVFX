@@ -12,11 +12,21 @@ public class RealtimeLabICVFX : ModuleRules
 			new string[]
             {
                 "Core",
+                "CoreUObject",
+				"Engine",
+
                 "MoSysAPI",
                 "MoSysTracking",
                 "MoSysTrackingEditor",
                 "MoSysLensDistortion",
                 "CanonLiveLinkPlugin",
+			}
+		);
+
+		PrivateDependencyModuleNames.AddRange(
+			new string[]
+			{
+				"DeveloperSettings",
 			}
 		);
 	}
