@@ -13,6 +13,12 @@ Third-party plugins:
 - MoSysVPFree ([Download on Fab](https://www.fab.com/listings/4b0ddb44-8d3d-4eb4-8009-9da580f54b38))
 - CanonLiveLinkPlugin ([Download from Canon](https://www.canon-europe.com/support/consumer/products/camcorders/cinema-eos/eos-c400.html?type=download&detailId=tcm:13-2389615&os=windows%2011&language=en&productTcmUri=tcm:13-2387148))
 - [Optional] NVIDIA DLSS ([Download from NVIDIA](https://developer.nvidia.com/rtx/dlss?sortBy=developer_learning_library%2Fsort%2Ffeatured%3Adesc%2Ctitle%3Aasc#section-getting-started))
+
+Switchboard Plugins (required if using SwitchboardConfigGenerator):
+- [ExeLauncher](https://github.com/jambuttenshaw/exelauncher)
+- [nDisplayTrace](https://github.com/jambuttenshaw/ndisplaytrace)
+
+See [Installing Switchboard Plugins](Docs/InstallingSwitchboardPlugins.md) for how to install Switchboard plugins.
 ## Quick Start
 > [!IMPORTANT]
 > For Switchboard to launch correctly, your project must be on DEATH's `D:` drive!
@@ -71,6 +77,13 @@ Launch Sequence:
 - It is sometimes recommended to run Switchboard Listener as Administrator on all render nodes.
 - Remember to increment the multi-user session ID between launches.
 - Delete `StudioProperties.json` and `<project name>_SwitchboardConfig.json` and regenerate via `SwitchboardConfigGenerator.exe` to restore Switchboard config to default.
+
+## Profiling
+The nDisplayTrace device can be used to profile all render nodes in the nDisplay config simultaneously. The trace files are given useful filenames and stored on the render nodes, but can be easily accessed remotely from a control machine.
+
+`TODO: Launching insights from Switchboard`
+
+`TODO: Setting up watch directories`
 
 ## TODO
 - LED wall meshes: Consistent naming between static mesh assets, static mesh components in the nDisplay config, and viewports in the nDisplay cluster. (E.g., wild wall meshes are labelled left vs right, static mesh components are enumerated - which associates with which?).
