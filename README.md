@@ -86,20 +86,10 @@ You can check if LiveLink and LiveLinkHub are working correctly by:
 If there are LiveLink issues:
 - Check Camera network settings. See [CanonLiveLinkPlugin documentation](Docs/CanonLiveLinkPluginDocs.pdf) for how to set up the Canon for LiveLink.
 
-For information:
-- All LiveLinkHub plugins are installed as **project plugins** in the LiveLinkHub project (`<Engine Directory>/Source/Programs/LiveLinkHub/`).
-- By default, LiveLinkHub will load the config file stored in `<Engine Directory>/Source/Programs/LiveLinkHub/Content`. If there are any issues with this config, an additional copy is inside this plugin in `Content/LiveLink/LiveLinkHubConfig_RealtimeLab.json`.
+All LiveLinkHub plugins are installed as **project plugins** in the LiveLinkHub project (`<Engine Directory>/Source/Programs/LiveLinkHub/`). LiveLinkHub plugins need to be installed once for each engine version. By default, LiveLinkHub will load the config file stored in `<Engine Directory>/Source/Programs/LiveLinkHub/Content`. If there are any issues with this config, an additional copy is inside this plugin in `Content/LiveLink/LiveLinkHubConfig_RealtimeLab.json`.
 
 ## Profiling
-The nDisplayTrace device can be used to profile all render nodes in the nDisplay config simultaneously. The trace files are given useful filenames and stored on the render nodes, but can be easily accessed remotely from a control machine.
-
-To start and stop profiling, use the "Start / Stop" profiling button on the nDispalyTrce device. **The nDisplay cluster must be running to begin profiling**.
-
-If you have configured a trace store directory in `StudioProperties.json` then all trace files will be saved there (locally on each render node). If there is no trace store directory set, then trace files will be stored in the default directory within each project (`<Project Root>/Saved/Profiling/`).
-
-The Insights frontend can be easily configured to automatically detect new trace files on the render node. Simply add the trace store directory on each render node into the Insights directory watchlist. For example, if I had the trace store set to `D:/TRACE_STORE` in `StudioProperties.json`, I can add the following additional directories for Insights to monitor:
-
-![Insights Watchlist](Docs/InsightsWatchlist.png)
+See [Docs/Profiling.md](Docs/Profiling.md) for instructions on how to profile all render nodes in the cluster simulataneously.
 
 ## TODO
 - LED wall meshes: Consistent naming between static mesh assets, static mesh components in the nDisplay config, and viewports in the nDisplay cluster. (E.g., wild wall meshes are labelled left vs right, static mesh components are enumerated - which associates with which?).
