@@ -27,7 +27,7 @@ These are step-by-step instructions for launching your project in the Realtime L
 > [!IMPORTANT]
 > For all features to work correctly, your project should be a C++ project. If it is not already a C++ project, then add an empty C++ Class from `Tools > Add C++ Class`.
 - Clone or download this repository and place it in your project's plugin directory (`<Project root>/Plugins`).
-> ![IMPORTANT]
+> [!IMPORTANT]
 > Do not install the plugin into the engine - it is designed to be installed separately into each project.
 - Right-click on the `.uproject` and click `Generate Visual Studio project files`. 
 - Open the generated `.sln` and build the project.
@@ -97,7 +97,7 @@ If there are LiveLink issues:
 All LiveLinkHub plugins are installed as **project plugins** in the LiveLinkHub project (`<Engine Directory>/Source/Programs/LiveLinkHub/`). LiveLinkHub plugins need to be installed once for each engine version. By default, LiveLinkHub will load the config file stored in `<Engine Directory>/Source/Programs/LiveLinkHub/Content`. If there are any issues with this config, an additional copy is inside this plugin in `Content/LiveLink/LiveLinkHubConfig_RealtimeLab.json`.
 
 ## Profiling
-See [Docs/Profiling.md](Docs/Profiling.md) for instructions on how to profile all render nodes in the cluster simulataneously.
+See [Profiling Guide](Docs/Profiling.md) for instructions on how to profile all render nodes in the cluster simulataneously.
 
 ## TODO
 - LED wall meshes: Consistent naming between static mesh assets, static mesh components in the nDisplay config, and viewports in the nDisplay cluster. (E.g., wild wall meshes are labelled left vs right, static mesh components are enumerated - which associates with which?).
