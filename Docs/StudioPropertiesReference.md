@@ -22,50 +22,65 @@ The default value is:
 Each entry in the `render_nodes` array is a specific instance of Unreal corresponding to a node in the nDisplay configuration. Each node should have:
 - `machine`: The physical machine that this node should run on, and should be one of the entries in the `addresses` structure.
 - `name`: The name of this node in the nDisplay configuration. It should match exactly.
-- `config` [Optional]: A reference to a Render Node Config (see below) to apply to this node.
+- `config` [Optional]: A reference to one or more Render Node Configs (see below) to apply to this node. It should either be a string, in the case of a single configuration, or an array of strings, to apply multiple configurations to a single node.
 
 The default config is:
 ```json
 "render_nodes": [
-    {
-        "machine": "war",
-        "name": "War"
-    },
-    {
-        "machine": "war",
-        "name": "War_OS"
-    },
-    {
-        "machine": "famine",
-        "name": "Famine"
-    },
-    {
-        "machine": "famine",
-        "name": "Famine_OS"
-    },
-    {
-        "machine": "pestilence",
-        "name": "Pestilence"
-    },
-    {
-        "machine": "pestilence",
-        "name": "Pestilence_OS"
-    },
-    {
-        "config": "wild_walls",
-        "machine": "pestilence",
-        "name": "Pestilence_Ceiling"
-    },
-    {
-        "config": "wild_walls",
-        "machine": "pestilence",
-        "name": "Pestilence_WildWallOne"
-    },
-    {
-        "config": "wild_walls",
-        "machine": "pestilence",
-        "name": "Pestilence_WildWallTwo"
-    }
+{ 
+    "name": "War", 
+    "machine": "war",
+    "config": "default"
+},
+{ 
+    "name": "War_OS", 
+    "machine": "war",
+    "config": "default"
+},
+{ 
+    "name": "Famine", 
+    "machine": "famine",
+    "config": "default"
+},
+{ 
+    "name": "Famine_OS", 
+    "machine": "famine",
+    "config": "default"
+},
+{ 
+    "name": "Pestilence", 
+    "machine": "pestilence",
+    "config": "default"
+},
+{ 
+    "name": "Pestilence_OS", 
+    "machine": "pestilence",
+    "config": "default"
+},
+{ 
+    "name": "Pestilence_Ceiling", 
+    "machine": "pestilence",
+    "config": [
+        "default",
+        "wild_walls"
+    ]
+},
+{ 
+    "name": "Pestilence_WildWallOne", 
+    "machine": "pestilence",
+    "config": [
+        "default",
+        "wild_walls"
+    ]
+},
+{ 
+    "name": "Pestilence_WildWallTwo", 
+    "machine": "pestilence",
+    "config": [
+        "default",
+        "wild_walls"
+    ]
+}
 ]
 ```
 ### Render Node Confiog
@@ -74,6 +89,11 @@ Configuration profiles can be applied to individual render nodes. These apply co
 An example render node config is as follows:
 ```json
 "render_node_config": {
+    "default": {
+        "cvars": [
+            "r.Composure.CompositingElements.DisableActiveRendering=0"
+        ]
+    },
     "wild_walls": {
         "cvars": [
             "r.VolumetricFog=0",
@@ -168,87 +188,107 @@ See [Profiling Guide](Profiling.md) for how to use the nDisplayTrace device.
 A full reference of the default `StudioProperties.json`:
 ```json
 {
-    "add_framelock_tester": true,
-    "addresses": {
-        "death": "192.168.56.20",
-        "famine": "192.168.56.29",
-        "gambit": "192.168.56.143",
-        "pestilence": "192.168.56.4",
-        "war": "192.168.56.24"
-    },
-    "control_nodes": [
-        {
-            "machine": "death",
-            "name": "Editor"
-        }
-    ],
-    "framelock_testing_app": "D:/FRAMELOCK_TESTING/dx12_present_barrier.exe",
-    "freefilesync": {
-        "dest_drives": [
-            "W:",
-            "X:",
-            "Y:"
-        ],
-        "machine": "death",
-        "path": "C:/Program Files/FreeFileSync/FreeFileSync.exe",
-        "source_drive": "D:"
-    },
-    "livelinkhub": "death",
-    "render_node_config": {
-        "wild_walls": {
-            "cvars": [
-                "r.VolumetricFog=0",
-                "r.HeterogeneousVolumes=0",
-                "r.DynamicGlobalIlluminationMethod=0",
-                "r.ReflectionMethod=0"
-            ]
-        }
-    },
-    "render_nodes": [
-        {
-            "machine": "war",
-            "name": "War"
-        },
-        {
-            "machine": "war",
-            "name": "War_OS"
-        },
-        {
-            "machine": "famine",
-            "name": "Famine"
-        },
-        {
-            "machine": "famine",
-            "name": "Famine_OS"
-        },
-        {
-            "machine": "pestilence",
-            "name": "Pestilence"
-        },
-        {
-            "machine": "pestilence",
-            "name": "Pestilence_OS"
-        },
-        {
-            "config": "wild_walls",
-            "machine": "pestilence",
-            "name": "Pestilence_Ceiling"
-        },
-        {
-            "config": "wild_walls",
-            "machine": "pestilence",
-            "name": "Pestilence_WildWallOne"
-        },
-        {
-            "config": "wild_walls",
-            "machine": "pestilence",
-            "name": "Pestilence_WildWallTwo"
-        }
-    ],
-    "trace": {
-        "machine": "death",
+	"addresses": {
+		"death": "192.168.56.20",
+		"gambit": "192.168.56.143",
+		"war": "192.168.56.24",
+		"famine": "192.168.56.29",
+		"pestilence": "192.168.56.4"
+	},
+	"render_node_config": {
+		"default": {
+			"cvars": [
+				"r.Composure.CompositingElements.DisableActiveRendering=0"
+			]
+		},
+		"wild_walls": {
+			"cvars": [
+				"r.VolumetricFog=0",
+				"r.HeterogeneousVolumes=0",
+				"r.DynamicGlobalIlluminationMethod=0",
+				"r.ReflectionMethod=0"
+			]
+		}
+	},
+	"render_nodes": [
+		{ 
+			"name": "War", 
+			"machine": "war",
+			"config": "default"
+		},
+		{ 
+			"name": "War_OS", 
+			"machine": "war",
+			"config": "default"
+		},
+		{ 
+			"name": "Famine", 
+			"machine": "famine",
+			"config": "default"
+		},
+		{ 
+			"name": "Famine_OS", 
+			"machine": "famine",
+			"config": "default"
+		},
+		{ 
+			"name": "Pestilence", 
+			"machine": "pestilence",
+			"config": "default"
+		},
+		{ 
+			"name": "Pestilence_OS", 
+			"machine": "pestilence",
+			"config": "default"
+		},
+		{ 
+			"name": "Pestilence_Ceiling", 
+			"machine": "pestilence",
+			"config": [
+				"default",
+				"wild_walls"
+			]
+		},
+		{ 
+			"name": "Pestilence_WildWallOne", 
+			"machine": "pestilence",
+			"config": [
+				"default",
+				"wild_walls"
+			]
+		},
+		{ 
+			"name": "Pestilence_WildWallTwo", 
+			"machine": "pestilence",
+			"config": [
+				"default",
+				"wild_walls"
+			]
+		}
+	],
+	"control_nodes": [
+		{
+			"name": "Editor",
+			"machine": "death"
+		}
+	],
+	"livelinkhub": "death",
+	"trace": {
         "name": "Trace",
+        "machine": "death",
         "trace_store": "D:/TRACE_STORE"
-    }
+    },
+	"add_framelock_tester": true,
+	"framelock_testing_app": "D:/FRAMELOCK_TESTING/dx12_present_barrier.exe",
+	"freefilesync": {
+		"machine": "death",
+		"path": "C:/Program Files/FreeFileSync/FreeFileSync.exe",
+		"source_drive": "D:",
+		"dest_drives": [
+			"W:",
+			"X:",
+			"Y:"
+		]
+	}
 }
 ```

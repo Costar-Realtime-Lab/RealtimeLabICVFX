@@ -20,14 +20,13 @@ Switchboard Plugins (required if using SwitchboardConfigGenerator):
 
 See [Installing Switchboard Plugins](Docs/InstallingSwitchboardPlugins.md) for how to install Switchboard plugins.
 ## Quick Start
+### 0. Prerequisites
 These are step-by-step instructions for launching your project in the Realtime Lab for the first time.
-> [!IMPORTANT]
-> Your project must be on DEATH's `D:` drive for it to launch correctly.
+- Your project must be on a `D:` drive for it to launch correctly.
+- For all features to work correctly, your project should be a C++ project. If it is not already a C++ project, then add an empty C++ Class within the engine by selecting `Tools > Add C++ Class` from the menu bar.
 ### 1. Installing and Building the Plugin
-> [!IMPORTANT]
-> For all features to work correctly, your project should be a C++ project. If it is not already a C++ project, then add an empty C++ Class from `Tools > Add C++ Class`.
 - Clone or download this repository and place it in your project's plugin directory (`<Project root>/Plugins`).
-> [!IMPORTANT]
+> [!CAUTION]
 > Do not install the plugin into the engine - it is designed to be installed separately into each project.
 - Right-click on the `.uproject` and click `Generate Visual Studio project files`. 
 - Open the generated `.sln` and build the project.
@@ -51,7 +50,7 @@ This can be done as follows:
     - Click on `nDisplayRealtimeLab` in the outliner.
     - Go to the `ICVFXCamera` component in the details panel.
     - In the `Camera` category, find `Cine Camera Actor` property and select `CanonC400` from the dropdown.
-- Position `nDisplayRealtimeLab` to desired location in the level.
+- Position `nDisplayRealtimeLab` to desired location in the level. The studio model can be used to give an idea of scale and placement.
 ### 4. Setting up Switchboard with SwitchboardConfigGenerator
 - Run `SwitchboardConfigGenerator.exe`. It is located in the root directory of the **RealtimeLabICVFX** plugin.
 - Input the path to the engine directory when prompted. By default, Unreal Engine is installed to `C:/Program Files/Epic Games/UE_5.x/Engine` but the actual location will depend on your engine version and install location.
@@ -75,7 +74,7 @@ Launch Sequence:
 - Launch all nDisplay and editor devices in Switchboard.
 
 ## Customizing Switchboard Config via `StudioProperties.json`
-`SwitchboardConfigGenerator` will create a `StudioProperties.json` within the plugin root directory. This can be modified to customize the Switchboard configuration that is generated (e.g. to customize CVars for specific render nodes on a per-project basis).
+`SwitchboardConfigGenerator` will create a `StudioProperties.json` within the project root directory (next to the `.uproject` file). This can be modified to customize the Switchboard configuration that is generated (e.g. to customize CVars for specific render nodes on a per-project basis).
 
 For more information on configuration options see the [Studio Properties Reference](Docs/StudioPropertiesReference.md).
 
