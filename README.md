@@ -20,8 +20,8 @@ Switchboard Plugins (required if using SwitchboardConfigGenerator):
 
 See [Installing Switchboard Plugins](Docs/InstallingSwitchboardPlugins.md) for how to install Switchboard plugins.
 ## Quick Start
-### 0. Prerequisites
 These are step-by-step instructions for launching your project in the Realtime Lab for the first time.
+### 0. Prerequisites
 - Your project must be on a `D:` drive for it to launch correctly.
 - For all features to work correctly, your project should be a C++ project. If it is not already a C++ project, then add an empty C++ Class within the engine by selecting `Tools > Add C++ Class` from the menu bar.
 ### 1. Installing and Building the Plugin
