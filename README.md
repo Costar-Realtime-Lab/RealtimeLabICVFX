@@ -29,7 +29,9 @@ These are step-by-step instructions for launching your project in the Realtime L
 > [!CAUTION]
 > Do not install the plugin into the engine - it is designed to be installed separately into each project.
 - Right-click on the `.uproject` and click `Generate Visual Studio project files`. 
-- Open the generated `.sln` and build the project.
+- Open the generated `.sln`.
+- Ensure configuration is set to `Development Editor`.
+- Build the project.
 ### 2. Remove Sublevels
 For nDisplay stability, all actors should be moved from sublevels into the persistent level. 
 This can be done as follows:
@@ -92,6 +94,7 @@ You can check if LiveLink and LiveLinkHub are working correctly by:
 
 If there are LiveLink issues:
 - Check Camera network settings. See [CanonLiveLinkPlugin documentation](Docs/CanonLiveLinkPluginDocs.pdf) for how to set up the Canon for LiveLink.
+- Check Live Link components on `CanonC400` actor are set to the correct subjects.
 
 All LiveLinkHub plugins are installed as **project plugins** in the LiveLinkHub project (`<Engine Directory>/Source/Programs/LiveLinkHub/`). LiveLinkHub plugins need to be installed once for each engine version. By default, LiveLinkHub will load the config file stored in `<Engine Directory>/Source/Programs/LiveLinkHub/Content`. If there are any issues with this config, an additional copy is inside this plugin in `Content/LiveLink/LiveLinkHubConfig_RealtimeLab.json`.
 
