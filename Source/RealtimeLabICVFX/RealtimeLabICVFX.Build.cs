@@ -17,7 +17,6 @@ public class RealtimeLabICVFX : ModuleRules
 
                 "MoSysAPI",
                 "MoSysTracking",
-                "MoSysTrackingEditor",
                 "MoSysLensDistortion",
                 "CanonLiveLinkPlugin",
 			}
