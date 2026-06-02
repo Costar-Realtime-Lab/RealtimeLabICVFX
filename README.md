@@ -30,7 +30,7 @@ These are step-by-step instructions for launching your project in the Realtime L
 > Do not install the plugin into the engine - it is designed to be installed separately into each project.
 - Right-click on the `.uproject` and click `Generate Visual Studio project files`. 
 - Open the generated `.sln`.
-- Ensure configuration is set to `Development Editor`.
+- Ensure build configuration is set to `Development Editor`.
 - Build the project.
 ### 2. Remove Sublevels
 For nDisplay stability, all actors should be moved from sublevels into the persistent level. 
@@ -54,24 +54,27 @@ This can be done as follows:
     - In the `Camera` category, find `Cine Camera Actor` property and select `CanonC400` from the dropdown.
 - Position `nDisplayRealtimeLab` to desired location in the level. The studio model can be used to give an idea of scale and placement.
 ### 4. Setting up Switchboard with SwitchboardConfigGenerator
-- Run `SwitchboardConfigGenerator.exe`. It is located in the root directory of the **RealtimeLabICVFX** plugin.
-- Input the path to the engine directory when prompted. By default, Unreal Engine is installed to `C:/Program Files/Epic Games/UE_5.x/Engine` but the actual location will depend on your engine version and install location.
+- Right-click on the `.uproject` and select `Generate Switchboard Config` (it may be in "Show more options"):
+![Select Generate Switchboard Config from the ](Docs/RunGenerateSwitchboardConfig.png)
+- If more than one nDisplay configurations are found, select the nDisplay configuration that was placed in the level in step 3 (if unsure, then select `nDisplayRealtimeLab_SingleNode`).
+- Select the render node that you want to deploy your project to.
 - `SwitchboardConfigGenerator` should have created `<project name>_SwitchboardConfig.json` next to your `.uproject` file.
 - Launch Switchboard.
 - Go to `Configs > Load Config > Browse...` and browse to `<project name>_SwitchboardConfig.json`. Open the generated config.
 - Select the level containing your nDisplay config from the `Level:` dropdown. You may need to click the refresh button to the right of the dropdown if your level is not shown in the dropdown.
 ### 5. Launching with Switchboard
 Pre-launch checklist:
-- All render nodes and LED processors are switched on and genlocked / framelocked. See [Framelock Verifcation Guide](Docs/FramelockVerification.md).
+- All LED processors are switched on.
+- The render node to be deployed to is switched on.
 - No instances of Unreal are currently running.
-- Switchboard Listener is running on all control and render nodes.
-- You have built the project since any previous source changes. Switchboard is not configured to build your project before launching.
+- Switchboard Listener is running on both the control and render nodes.
+- You have built the project since any previous changes to project or plugin source. Switchboard is not configured to build your project before launching.
 
 Launch Sequence:
 - Connect to all Switchboard Listener instances for each device in Switchboard.
 - Launch Switchboard with the generated configuration for your project.
 - Run the `Sync` device to launch a FreeFileSync batch to synchronize the project between the control machine and all render nodes. Wait until synchronization completes.
-- Click plus button in right hand side of multi-user session dialog to increment session ID. **You MUST do this between every launch.**
+- Click plus button in right hand side of multi-user session dialog to increment session ID. **Do this between every launch.**
 - Launch the `LiveLinkHub` device first.
 - Launch all nDisplay and editor devices in Switchboard.
 
@@ -80,12 +83,12 @@ Launch Sequence:
 
 For more information on configuration options see the [Studio Properties Reference](Docs/StudioPropertiesReference.md).
 
-After modifying `StudioProperties.json`, run `SwitchboardConfigGenerator.exe` again to update the configuration. This will overwrite any additional configuration you have done within Switchboard, so ideally all additional config should be performed within `StudioProperties.json`.
+After modifying `StudioProperties.json`, run `Generate Switchboard Config` again (as per step 4) to update the configuration. This will overwrite any additional configuration you have done within Switchboard, so ideally all additional config should be performed within `StudioProperties.json`.
 
 ## Troubleshooting
 - It is sometimes recommended to run Switchboard Listener as Administrator on all render nodes.
 - Remember to increment the multi-user session ID between launches.
-- Delete `StudioProperties.json` and `<project name>_SwitchboardConfig.json` and regenerate via `SwitchboardConfigGenerator.exe` to restore Switchboard config to default.
+- Delete `StudioProperties.json` and `<project name>_SwitchboardConfig.json` and regenerate via `Generate Switchboard Config` to restore Switchboard config to default.
 
 ### LiveLink
 You can check if LiveLink and LiveLinkHub are working correctly by:
@@ -100,6 +103,3 @@ All LiveLinkHub plugins are installed as **project plugins** in the LiveLinkHub 
 
 ## Profiling
 See [Profiling Guide](Docs/Profiling.md) for instructions on how to profile all render nodes in the cluster simulataneously.
-
-## TODO
-- LED wall meshes: Consistent naming between static mesh assets, static mesh components in the nDisplay config, and viewports in the nDisplay cluster. (E.g., wild wall meshes are labelled left vs right, static mesh components are enumerated - which associates with which?).

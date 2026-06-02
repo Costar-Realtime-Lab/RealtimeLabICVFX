@@ -8,11 +8,25 @@ The default value is:
 ```json
 "addresses": {
     "death": "192.168.56.20",
-    "famine": "192.168.56.29",
     "gambit": "192.168.56.143",
-    "pestilence": "192.168.56.4",
-    "war": "192.168.56.24"
+	"apocalypse": "192.168.56.74",
+
+    "war": "192.168.56.24",
+    "famine": "192.168.56.29",
+    "pestilence": "192.168.56.4"
 }
+```
+
+## Available Render Nodes
+You can choose which render node the project should be deployed to. All machines that support being used as a render node are listed, and can be selected from when generating Switchboard config.
+
+The default value is:
+```json
+"available_render_nodes": [
+	"war",
+	"famine",
+	"pestilence"
+]
 ```
 
 ## Render Cluster Configuration
@@ -20,103 +34,67 @@ The default value is:
 > The render node configuration MUST match the nDisplay conifugration. It is recommended to NOT change the default render cluster configuration, this is included mainly for reference.
 
 Each entry in the `render_nodes` array is a specific instance of Unreal corresponding to a node in the nDisplay configuration. Each node should have:
-- `machine`: The physical machine that this node should run on, and should be one of the entries in the `addresses` structure.
 - `name`: The name of this node in the nDisplay configuration. It should match exactly.
 - `config` [Optional]: A reference to one or more Render Node Configs (see below) to apply to this node. It should either be a string, in the case of a single configuration, or an array of strings, to apply multiple configurations to a single node.
 
 The default config is:
 ```json
 "render_nodes": [
-{ 
-    "name": "War", 
-    "machine": "war",
-    "config": "default"
-},
-{ 
-    "name": "War_OS", 
-    "machine": "war",
-    "config": "default"
-},
-{ 
-    "name": "Famine", 
-    "machine": "famine",
-    "config": "default"
-},
-{ 
-    "name": "Famine_OS", 
-    "machine": "famine",
-    "config": "default"
-},
-{ 
-    "name": "Pestilence", 
-    "machine": "pestilence",
-    "config": "default"
-},
-{ 
-    "name": "Pestilence_OS", 
-    "machine": "pestilence",
-    "config": "default"
-},
-{ 
-    "name": "Pestilence_Ceiling", 
-    "machine": "pestilence",
-    "config": [
-        "default",
-        "wild_walls"
-    ]
-},
-{ 
-    "name": "Pestilence_WildWallOne", 
-    "machine": "pestilence",
-    "config": [
-        "default",
-        "wild_walls"
-    ]
-},
-{ 
-    "name": "Pestilence_WildWallTwo", 
-    "machine": "pestilence",
-    "config": [
-        "default",
-        "wild_walls"
-    ]
-}
+    {
+		"name": "OuterFrustum",
+		"config": [
+			"default",
+			"high_performance"
+		]
+	},
+	{
+		"name": "InnerFrustum",
+		"config": "default"
+	},
+	{
+		"name": "Ceiling",
+		"config": [
+			"default",
+			"high_performance"
+		]
+	}
 ]
 ```
-### Render Node Confiog
-Configuration profiles can be applied to individual render nodes. These apply collections of CVars to enable/disable/control rendering features of specific instances of Unreal. For example, turning off reflections and global illumination in the ceiling and wild walls improves cluster performance with minimal reduction in perceived quality.
+### Render Node Config
+Configuration profiles can be applied to individual render nodes. These apply collections of CVars to enable/disable/control rendering features of specific instances of Unreal. For example, turning off reflections and global illumination in the outer frustum, ceiling, and wild walls improves cluster performance with minimal reduction in perceived quality.
 
 An example render node config is as follows:
 ```json
 "render_node_config": {
     "default": {
         "cvars": [
-            "r.Composure.CompositingElements.DisableActiveRendering=0"
+            "r.Composure.CompositingElements.DisableActiveRendering=1",
+            "CompUtils.CreateViewport=0"
         ]
     },
-    "wild_walls": {
+    "high_performance": {
         "cvars": [
             "r.VolumetricFog=0",
-            "r.HeterogesneousVolumes=0",
+            "r.HeterogeneousVolumes=0",
             "r.DynamicGlobalIlluminationMethod=0",
             "r.ReflectionMethod=0"
         ]
     }
 }
 ```
-`wild_walls` is the look-up key for the configuration and should be used when referencing a config.
+For example, `high_performance` is the look-up key for the configuration and should be used when referencing a config.
 
 ## Editor Configuration
 Any number of machines can be specified to be used as editors. The format is similar to the render node config where each entry in the `control_nodes` array should contain:
-- `machine`: The physical machine the node should run on. Must be an entry within the `addresses` structure.
 - `name`: A user-friendly name for the instance of Unreal running the editor. Can be anything.
+- `machine`: The physical machine the node should run on. Must be an entry within the `addresses` structure.
 
 The default editor config will create one instance of an editor on DEATH:
 ```json
 "control_nodes": [
     {
+		"name": "Editor"
         "machine": "death",
-        "name": "Editor"
     }
 ]
 ```
@@ -131,12 +109,12 @@ The default LiveLinkHub configuration is:
 "livelinkhub": "death"
 ```
 ## FreeFileSync
-FreeFileSync is used to mirror the project from the control machine onto all render machines.
+FreeFileSync is used to mirror the project from the control machine onto the render machines.
 
 The following options should be configured:
 - `machine`: Which machine should FreeFileSync execute from. This should be the machine that has the master copy of the project (i.e. the control machine). It must be an entry from the `addresses` structure.
 - `source_drive`: The drive on which the project resides. By default, this is the `D:` on DEATH. This is the drive that the project will be copied from.
-- `dest_drives`: An array of drive letters that correspond to the network-mapped drives on the render nodes. These are the drives that the project files will be copied to, with the same relative path as the project has on the source drive.
+- `dest_drives`: A mapping of machine names to drive letters that correspond to the network-mapped drives on the render nodes. These are the drives that the project files will be copied to, with the same relative path as the project has on the source drive. Every machine that can be used as a render node should be present.
 - `path`: The filepath to the FreeFileSync application on the specified `machine`.
 
 > [!IMPORTANT]
@@ -146,23 +124,15 @@ The default FreeFileSync config is:
 ```json
 "freefilesync": {
     "machine": "death",
+    "path": "C:/Program Files/FreeFileSync/FreeFileSync.exe",
     "source_drive": "D:",
-    "dest_drives": [
-        "W:",
-        "X:",
-        "Y:"
-    ],
-    "path": "C:/Program Files/FreeFileSync/FreeFileSync.exe"
+	"dest_drives": {
+		"war": "W:",
+		"famine": "Y:",
+		"pestilence": "X:"
+	}
 }
 ```
-
-## Framelock Verification
-
-There are two properties that must be configured to enable framelock verification:
-- `add_framelock_tester`: Boolean value whether to add the devices to Switchboard. Can be set to false when not required to reduce Switchboard clutter.
-- `framelock_testing_app`: Path to the framelock testing application. It must be the same on all render nodes.
-
-See the [Framelock Verification Guide](FramelockVerification.md) for how to use the framelock verification application.
 
 ## nDisplayTrace
 
@@ -189,106 +159,83 @@ A full reference of the default `StudioProperties.json`:
 ```json
 {
 	"addresses": {
-		"death": "192.168.56.20",
-		"gambit": "192.168.56.143",
-		"war": "192.168.56.24",
-		"famine": "192.168.56.29",
-		"pestilence": "192.168.56.4"
-	},
-	"render_node_config": {
-		"default": {
-			"cvars": [
-				"r.Composure.CompositingElements.DisableActiveRendering=0"
-			]
-		},
-		"wild_walls": {
-			"cvars": [
-				"r.VolumetricFog=0",
-				"r.HeterogeneousVolumes=0",
-				"r.DynamicGlobalIlluminationMethod=0",
-				"r.ReflectionMethod=0"
-			]
-		}
-	},
-	"render_nodes": [
-		{ 
-			"name": "War", 
-			"machine": "war",
-			"config": "default"
-		},
-		{ 
-			"name": "War_OS", 
-			"machine": "war",
-			"config": "default"
-		},
-		{ 
-			"name": "Famine", 
-			"machine": "famine",
-			"config": "default"
-		},
-		{ 
-			"name": "Famine_OS", 
-			"machine": "famine",
-			"config": "default"
-		},
-		{ 
-			"name": "Pestilence", 
-			"machine": "pestilence",
-			"config": "default"
-		},
-		{ 
-			"name": "Pestilence_OS", 
-			"machine": "pestilence",
-			"config": "default"
-		},
-		{ 
-			"name": "Pestilence_Ceiling", 
-			"machine": "pestilence",
-			"config": [
-				"default",
-				"wild_walls"
-			]
-		},
-		{ 
-			"name": "Pestilence_WildWallOne", 
-			"machine": "pestilence",
-			"config": [
-				"default",
-				"wild_walls"
-			]
-		},
-		{ 
-			"name": "Pestilence_WildWallTwo", 
-			"machine": "pestilence",
-			"config": [
-				"default",
-				"wild_walls"
-			]
-		}
+        "death": "192.168.56.20",
+        "gambit": "192.168.56.143",
+		"apocalypse": "192.168.56.74",
+
+        "war": "192.168.56.24",
+        "famine": "192.168.56.29",
+        "pestilence": "192.168.56.4"
+    },
+
+	"available_render_nodes": [
+		"war",
+		"famine",
+		"pestilence"
 	],
-	"control_nodes": [
+
+    "control_nodes": [
+        {
+            "name": "Editor",
+            "machine": "death"
+        }
+    ],
+
+    "render_node_config": {
+        "default": {
+            "cvars": [
+                "r.Composure.CompositingElements.DisableActiveRendering=1",
+                "CompUtils.CreateViewport=0"
+            ]
+        },
+        "high_performance": {
+            "cvars": [
+                "r.VolumetricFog=0",
+                "r.HeterogeneousVolumes=0",
+                "r.DynamicGlobalIlluminationMethod=0",
+                "r.ReflectionMethod=0"
+            ]
+        }
+    },
+
+    "render_nodes": [
+	    {
+			"name": "OuterFrustum",
+			"config": [
+				"default",
+				"high_performance"
+			]
+		},
 		{
-			"name": "Editor",
-			"machine": "death"
+			"name": "InnerFrustum",
+			"config": "default"
+		},
+		{
+			"name": "Ceiling",
+			"config": [
+				"default",
+				"high_performance"
+			]
 		}
-	],
-	"livelinkhub": "death",
-	"trace": {
-        "name": "Trace",
+    ],
+
+	"freefilesync": {
         "machine": "death",
+        "path": "C:/Program Files/FreeFileSync/FreeFileSync.exe",
+        "source_drive": "D:",
+		"dest_drives": {
+			"war": "W:",
+			"famine": "Y:",
+			"pestilence": "X:"
+		}
+    },
+
+	"trace": {
+        "machine": "death",
+        "name": "Trace",
         "trace_store": "D:/TRACE_STORE"
     },
-	"add_framelock_tester": true,
-	"framelock_testing_app": "D:/FRAMELOCK_TESTING/dx12_present_barrier.exe",
-	"freefilesync": {
-		"machine": "death",
-		"path": "C:/Program Files/FreeFileSync/FreeFileSync.exe",
-		"source_drive": "D:",
-		"dest_drives": [
-			"W:",
-			"X:",
-			"Y:"
-		]
-	}
+
+    "livelinkhub": "death"
 }
 ```
