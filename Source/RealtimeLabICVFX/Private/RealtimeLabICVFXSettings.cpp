@@ -1,8 +1,11 @@
 #include "RealtimeLabICVFXSettings.h"
+#include "Misc/CommandLine.h"
+
 
 URealtimeLabICVFXSettings::URealtimeLabICVFXSettings()
 {
 	FParse::Value(FCommandLine::Get(), TEXT("-StageFriendlyName="), CommandLineFriendlyName);
+	FParse::Value(FCommandLine::Get(), TEXT("-TopologyFriendlyName="), CommandLineTopologyFriendlyName);
 }
 
 FName URealtimeLabICVFXSettings::GetCategoryName() const

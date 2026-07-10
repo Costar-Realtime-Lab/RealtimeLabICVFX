@@ -24,6 +24,10 @@ public:
 	/**
 	 * A friendly name for this instance of Unreal that is given through the command line.
 	 */
-	FName CommandLineFriendlyName;
+	FString CommandLineFriendlyName;
 
+	/**
+	 * A friendly name for all instances of the rendering topology in use - which is useful for logging purposes, to find the correct log file.
+	 */
+	FString CommandLineTopologyFriendlyName;
 };

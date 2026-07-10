@@ -1,5 +1,11 @@
 #include "RealtimeLabICVFXSettings.h"
 
+#include "Engine/Engine.h"
+#include "HAL/FileManager.h"
+#include "HAL/IConsoleManager.h"
+#include "Misc/App.h"
+#include "Misc/Paths.h"
+
 
 TOptional<FString> TryParsePath(FString Path)
 {
@@ -48,13 +54,16 @@ static void RequestBeginTracing(const TArray<FString>& Args)
 	}
 
 	// Get a name for the trace file
-	FName FriendlyDeviceName = GetMutableDefault<URealtimeLabICVFXSettings>()->CommandLineFriendlyName;
+	const URealtimeLabICVFXSettings* Settings = GetMutableDefault<URealtimeLabICVFXSettings>();
+	FString FriendlyDeviceName = Settings->CommandLineFriendlyName;
+	FString FriendlyTopologyName = Settings->CommandLineTopologyFriendlyName;
 
 	FStringFormatNamedArguments FormatArgs;
 	FormatArgs.Add(TEXT("ProjectName"), FApp::GetProjectName());
-	FormatArgs.Add(TEXT("StageName"), FriendlyDeviceName.ToString());
+	FormatArgs.Add(TEXT("StageName"), FriendlyDeviceName);
+	FormatArgs.Add(TEXT("TopologyName"), FriendlyTopologyName.Len() ? FriendlyTopologyName + TEXT("_") : FString{});
 	FormatArgs.Add(TEXT("Time"), FDateTime::Now().ToString(TEXT("%Y%m%d_%H%M%S")));
-	FString Filename = FString::Format(TEXT("{ProjectName}_{StageName}_{Time}.utrace"), FormatArgs);
+	FString Filename = FString::Format(TEXT("{ProjectName}_{TopologyName}{StageName}_{Time}.utrace"), FormatArgs);
 
 	FString FullPath = FPaths::Combine(Path.Get(""), Filename);
 	FString Exec = FString::Format(TEXT("Trace.File {0}"), { FullPath });
